@@ -13,6 +13,30 @@ const leagues = [
   { id: 78, name: 'Bundesliga' }       // Alemania
 ];
 
+// Endpoint para obtener tarjetas de las 5 grandes ligas en la temporada 2023
+app.get('/tarjetas', async (req, res) => {
+  try {
+    const responses = await Promise.all(leagues.map(async (league) => {  // Acceso correcto al ID de cada liga
+      const options = {
+        method: 'GET',
+        url: `https://v3.football.api-sports.io/cards`,
+        params: { league: league.id, season: 2023 },  // Aquí usamos league.id
+        headers: {
+          'X-RapidAPI-Key': API_KEY,
+          'X-RapidAPI-Host': 'v3.football.api-sports.io'
+        }
+      };
+      const response = await axios.request(options);
+      return response.data;
+    }));
+
+    res.json(responses);
+  } catch (error) {
+    res.status(500).send('Error al obtener las tarjetas');
+  }
+});
+
+
 // Configuramos EJS como el motor de plantillas
 app.set('view engine', 'ejs');
 app.use(express.static('public')); // Configuramos la carpeta 'public' para archivos estáticos como CSS y JS
@@ -56,6 +80,10 @@ app.get('/team/:id/stats', async (req, res) => {
       }
     });
     const stats = response.data.response; // Obtenemos las estadísticas del equipo de la respuesta
+
+    // Agrega el console.log aquí para verificar los datos
+    console.log('Estadísticas del equipo:', stats);
+
     res.render('team-stats', { stats }); // Renderizamos la vista 'team-stats.ejs' con las estadísticas del equipo
   } catch (error) {
     console.error('Error al obtener las estadísticas del equipo:', error.message); // Mostramos el error en la consola si ocurre

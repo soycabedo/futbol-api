@@ -15,12 +15,13 @@
     
     <!-- Lista de estadísticas básicas del equipo -->
     <ul class="list-group">
-      <li class="list-group-item">Partidos Jugados: <%= stats.fixtures.played.total %></li>
-      <li class="list-group-item">Goles Totales: <%= stats.goals.for.total.total %></li>
-      <li class="list-group-item">Corners: <%= stats.corners.total %></li>
-      <li class="list-group-item">Tarjetas Amarillas: <%= stats.cards.yellow.total %></li>
-      <li class="list-group-item">Tarjetas Rojas: <%= stats.cards.red.total %></li>
+      <li class="list-group-item">Partidos Jugados: <%= stats && stats.fixtures && stats.fixtures.played ? stats.fixtures.played.total : 'N/A' %></li>
+      <li class="list-group-item">Goles Totales: <%= stats && stats.goals && stats.goals.for && stats.goals.for.total ? stats.goals.for.total.total : 'N/A' %></li>
+      <li class="list-group-item">Corners: <%= stats && stats.corners ? stats.corners.total : 'N/A' %></li>
+      <li class="list-group-item">Tarjetas Amarillas: <%= stats && stats.cards && stats.cards.yellow ? stats.cards.yellow.total : 'N/A' %></li>
+      <li class="list-group-item">Tarjetas Rojas: <%= stats && stats.cards && stats.cards.red ? stats.cards.red.total : 'N/A' %></li>
     </ul>
+    
 
     <!-- Sección para los gráficos -->
     <h3 class="mt-4">Gráficos de Estadísticas</h3>
@@ -37,7 +38,11 @@
         labels: ['Total', 'Casa', 'Fuera'], // Etiquetas para los datos
         datasets: [{
           label: 'Goles', // Etiqueta del gráfico
-          data: [<%= stats.goals.for.total.total %>, <%= stats.goals.for.total.home %>, <%= stats.goals.for.total.away %>], // Datos de goles
+          data: [
+            <%= stats && stats.goals && stats.goals.for && stats.goals.for.total ? stats.goals.for.total.total : 0 %>, 
+            <%= stats && stats.goals && stats.goals.for && stats.goals.for.total ? stats.goals.for.total.home : 0 %>, 
+            <%= stats && stats.goals && stats.goals.for && stats.goals.for.total ? stats.goals.for.total.away : 0 %>
+          ], // Datos de goles
           backgroundColor: 'rgba(75, 192, 192, 0.2)', // Color de fondo de las barras
           borderColor: 'rgba(75, 192, 192, 1)', // Color del borde de las barras
           borderWidth: 1 // Ancho del borde de las barras
@@ -51,6 +56,6 @@
         }
       }
     });
-  </script>
+  </script>  
 </body>
 </html>
