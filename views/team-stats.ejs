@@ -15,13 +15,13 @@
     
     <!-- Lista de estadísticas básicas del equipo -->
     <ul class="list-group">
-      <li class="list-group-item">Partidos Jugados: <%= stats && stats.fixtures && stats.fixtures.played ? stats.fixtures.played.total : 'N/A' %></li>
-      <li class="list-group-item">Goles Totales: <%= stats && stats.goals && stats.goals.for && stats.goals.for.total ? stats.goals.for.total.total : 'N/A' %></li>
-      <li class="list-group-item">Corners: <%= stats && stats.corners ? stats.corners.total : 'N/A' %></li>
-      <li class="list-group-item">Tarjetas Amarillas: <%= stats.cards.totalYellow %></li>
-      <li class="list-group-item">Tarjetas Rojas: <%= stats.cards.totalRed %></li>
-
+      <li class="list-group-item">Partidos Jugados: <%= stats.fixtures.played.total %></li>
+      <li class="list-group-item">Goles Totales: <%= stats.goals.for.total.total %></li>
+      <li class="list-group-item">Corners: <%= stats.corners.total %></li>
+      <li class="list-group-item">Tarjetas Amarillas: <%= stats.totalYellowCards %></li> <!-- Aquí se muestra el total de tarjetas amarillas -->
+      <li class="list-group-item">Tarjetas Rojas: <%= stats.totalRedCards %></li>       <!-- Aquí se muestra el total de tarjetas rojas -->
     </ul>
+    
     
 
     <!-- Sección para los gráficos -->
