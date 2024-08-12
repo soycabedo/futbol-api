@@ -13,6 +13,11 @@ const leagues = [
   { id: 78, name: 'Bundesliga' }       // Alemania
 ];
 
+// Función para sumar las tarjetas por intervalos
+function sumCardsByInterval(cards) {
+  return Object.values(cards).reduce((total, interval) => total + (interval.total || 0), 0);
+}
+
 // Endpoint para obtener tarjetas de las 5 grandes ligas en la temporada 2023
 app.get('/tarjetas', async (req, res) => {
   try {
@@ -28,13 +33,27 @@ app.get('/tarjetas', async (req, res) => {
       };
       const response = await axios.request(options);
       return response.data;
+
+      // Sumar tarjetas amarillas y rojas para cada liga
+      const yellowCardsTotal = sumCardsByInterval(data.response.cards.yellow);
+      const redCardsTotal = sumCardsByInterval(data.response.cards.red);
+
+      // Añadir los totales al objetos
+      data.response.totalYellowCards = yellowCardsTotal;
+      data.response.totalRedCards = redCardsTotal;
+
+      return data; //Devolver los datos modificados
+
+
     }));
 
-    res.json(responses);
+    res.json(responses); // DEvolver todos los datos al cliente
   } catch (error) {
     res.status(500).send('Error al obtener las tarjetas');
   }
 });
+
+
 
 
 // Configuramos EJS como el motor de plantillas
