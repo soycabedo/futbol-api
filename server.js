@@ -107,6 +107,9 @@ app.get('/team/:id/stats', async (req, res) => {
 
     // Agrega el console.log aquí para verificar los datos
     console.log('Estadísticas del equipo:', stats);
+    console.log('Tarjetas amarillas:', JSON.stringify(stats.cards.yellow, null, 2));
+    console.log('Tarjetas rojas:', JSON.stringify(stats.cards.red, null, 2));
+
 
     res.render('team-stats', { stats }); // Renderizamos la vista 'team-stats.ejs' con las estadísticas del equipo
   } catch (error) {
