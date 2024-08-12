@@ -19,39 +19,44 @@ function sumCardsByInterval(cards) {
 }
 
 // Endpoint para obtener tarjetas de las 5 grandes ligas en la temporada 2023
-app.get('/tarjetas', async (req, res) => {
+// Función para sumar las tarjetas por intervalos
+function sumCardsByInterval(cards) {
+  return Object.values(cards).reduce((total, interval) => total + (interval.total || 0), 0);
+}
+
+// Endpoint para obtener tarjetas de un equipo específico en la temporada 2023
+app.get('/team/:id/cards', async (req, res) => {
+  const teamId = req.params.id;
+  const leagueId = req.query.league;  // Suponiendo que se pase el ID de la liga como parámetro de consulta
+  
   try {
-    const responses = await Promise.all(leagues.map(async (league) => {  // Acceso correcto al ID de cada liga
-      const options = {
-        method: 'GET',
-        url: `https://v3.football.api-sports.io/cards`,
-        params: { league: league.id, season: 2023 },  // Aquí usamos league.id
-        headers: {
-          'X-RapidAPI-Key': API_KEY,
-          'X-RapidAPI-Host': 'v3.football.api-sports.io'
-        }
-      };
-      const response = await axios.request(options);
-      return response.data;
+    const options = {
+      method: 'GET',
+      url: `https://v3.football.api-sports.io/teams/statistics`,
+      params: { league: leagueId, season: 2023, team: teamId },  // Ahora especificamos equipo y liga
+      headers: {
+        'X-RapidAPI-Key': API_KEY,
+        'X-RapidAPI-Host': 'v3.football.api-sports.io'
+      }
+    };
+    
+    const response = await axios.request(options);
+    const data = response.data.response;
 
-      // Sumar tarjetas amarillas y rojas para cada liga
-      const yellowCardsTotal = sumCardsByInterval(data.response.cards.yellow);
-      const redCardsTotal = sumCardsByInterval(data.response.cards.red);
+    // Sumar tarjetas amarillas y rojas del equipo
+    const yellowCardsTotal = sumCardsByInterval(data.cards.yellow);
+    const redCardsTotal = sumCardsByInterval(data.cards.red);
 
-      // Añadir los totales al objetos
-      data.response.totalYellowCards = yellowCardsTotal;
-      data.response.totalRedCards = redCardsTotal;
+    // Añadir los totales al objeto de datos
+    data.totalYellowCards = yellowCardsTotal;
+    data.totalRedCards = redCardsTotal;
 
-      return data; //Devolver los datos modificados
-
-
-    }));
-
-    res.json(responses); // DEvolver todos los datos al cliente
+    res.json(data);  // Devolver los datos modificados al cliente
   } catch (error) {
-    res.status(500).send('Error al obtener las tarjetas');
+    res.status(500).send('Error al obtener las tarjetas del equipo');
   }
 });
+
 
 
 
