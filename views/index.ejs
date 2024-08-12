@@ -2,16 +2,24 @@
 <html>
 <head>
   <title>Fútbol API</title>
+  <!-- Incluimos Bootstrap desde un CDN para utilizar sus estilos predefinidos -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Ligas de Fútbol</h1>
-  <ul>
-    <% leagues.forEach(league => { %>
-      <li>
-        <a href="/league/<%= league.league.id %>/teams"><%= league.league.name %></a>
-      </li>
-    <% }) %>
-  </ul>
+  <div class="container">
+    <!-- Título principal de la página -->
+    <h1 class="mt-4">Ligas de Fútbol</h1>
+    <!-- Lista de ligas disponibles -->
+    <ul class="list-group">
+      <% leagues.forEach(league => { %>
+        <!-- Creamos un enlace para cada liga que redirige a la página de equipos -->
+        <li class="list-group-item">
+          <a href="/league/<%= league.id %>/teams"><%= league.name %></a>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
 </body>
 </html>
+
 
