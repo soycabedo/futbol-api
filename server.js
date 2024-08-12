@@ -20,8 +20,11 @@ function sumCardsByInterval(cards) {
 
 // Endpoint para obtener tarjetas de las 5 grandes ligas en la temporada 2023
 // Función para sumar las tarjetas por intervalos
-function sumCardsByInterval(cards) {
-  return Object.values(cards).reduce((total, interval) => total + (interval.total || 0), 0);
+  function sumCardsByInterval(cards) {
+  // Sumamos las tarjetas en todos los intervalos, ignorando aquellos con valores null
+  return Object.values(cards).reduce((total, interval) => {
+    return total + (interval.total || 0);
+  }, 0);
 }
 
 // Endpoint para obtener tarjetas de un equipo específico en la temporada 2023

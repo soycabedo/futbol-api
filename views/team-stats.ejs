@@ -15,12 +15,14 @@
     
     <!-- Lista de estadísticas básicas del equipo -->
     <ul class="list-group">
-      <li class="list-group-item">Partidos Jugados: <%= stats && stats.fixtures && stats.fixtures.played ? stats.fixtures.played.total : 'N/A' %></li>
-      <li class="list-group-item">Goles Totales: <%= stats && stats.goals && stats.goals.for && stats.goals.for.total ? stats.goals.for.total.total : 'N/A' %></li>
-      <li class="list-group-item">Corners: <%= stats && stats.corners ? stats.corners.total : 'N/A' %></li>
-      <li class="list-group-item">Tarjetas Amarillas: <%= stats && typeof stats.totalYellowCards !== 'undefined' ? stats.totalYellowCards : 'N/A' %></li>
-      <li class="list-group-item">Tarjetas Rojas: <%= stats && typeof stats.totalRedCards !== 'undefined' ? stats.totalRedCards : 'N/A' %></li>
+      <li class="list-group-item">Partidos Jugados: <%= stats.fixtures && stats.fixtures.played ? stats.fixtures.played.total : 'N/A' %></li>
+      <li class="list-group-item">Goles Totales: <%= stats.goals && stats.goals.for && stats.goals.for.total ? stats.goals.for.total.total : 'N/A' %></li>
+      <li class="list-group-item">Corners: <%= stats.corners && stats.corners.total ? stats.corners.total : 'N/A' %></li>
+      <li class="list-group-item">Tarjetas Amarillas: <%= typeof stats.totalYellowCards !== 'undefined' ? stats.totalYellowCards : 'N/A' %></li>
+      <li class="list-group-item">Tarjetas Rojas: <%= typeof stats.totalRedCards !== 'undefined' ? stats.totalRedCards : 'N/A' %></li>
     </ul>
+    
+    
     
     
     
