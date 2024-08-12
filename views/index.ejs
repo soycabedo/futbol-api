@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fútbol API</title>
+</head>
+<body>
+  <h1>Ligas de Fútbol</h1>
+  <ul>
+    <% leagues.forEach(league => { %>
+      <li>
+        <a href="/league/<%= league.league.id %>/teams"><%= league.league.name %></a>
+      </li>
+    <% }) %>
+  </ul>
+</body>
+</html>
+

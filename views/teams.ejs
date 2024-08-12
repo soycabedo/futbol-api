@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Equipos de la Liga</title>
+</head>
+<body>
+  <h1>Equipos de la Liga</h1>
+  <ul>
+    <% teams.forEach(team => { %>
+      <li><%= team.team.name %></li>
+    <% }) %>
+  </ul>
+</body>
+</html>
