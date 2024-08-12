@@ -18,8 +18,9 @@
       <li class="list-group-item">Partidos Jugados: <%= stats && stats.fixtures && stats.fixtures.played ? stats.fixtures.played.total : 'N/A' %></li>
       <li class="list-group-item">Goles Totales: <%= stats && stats.goals && stats.goals.for && stats.goals.for.total ? stats.goals.for.total.total : 'N/A' %></li>
       <li class="list-group-item">Corners: <%= stats && stats.corners ? stats.corners.total : 'N/A' %></li>
-      <li class="list-group-item">Tarjetas Amarillas: <%= stats && stats.cards && stats.cards.yellow ? stats.cards.yellow.total : 'N/A' %></li>
-      <li class="list-group-item">Tarjetas Rojas: <%= stats && stats.cards && stats.cards.red ? stats.cards.red.total : 'N/A' %></li>
+      <li class="list-group-item">Tarjetas Amarillas: <%= stats.cards.totalYellow %></li>
+      <li class="list-group-item">Tarjetas Rojas: <%= stats.cards.totalRed %></li>
+
     </ul>
     
 
