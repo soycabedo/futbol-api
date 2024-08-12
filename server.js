@@ -13,12 +13,9 @@ const leagues = [
   { id: 78, name: 'Bundesliga' }       // Alemania
 ];
 
-// Función para sumar las tarjetas por intervalos
-function sumCardsByInterval(cards) {
-  return Object.values(cards).reduce((total, interval) => total + (interval.total || 0), 0);
-}
 
 // Endpoint para obtener tarjetas de las 5 grandes ligas en la temporada 2023
+
 // Función para sumar las tarjetas por intervalos
   function sumCardsByInterval(cards) {
   // Sumamos las tarjetas en todos los intervalos, ignorando aquellos con valores null
@@ -108,7 +105,20 @@ app.get('/team/:id/stats', async (req, res) => {
     });
     const stats = response.data.response; // Obtenemos las estadísticas del equipo de la respuesta
 
-    // Agrega el console.log aquí para verificar los datos
+    // Verificamos si stats.cards existe para evitar errores
+    if (stats.cards) {
+      const yellowCardsTotal = sumCardsByInterval(stats.cards.yellow);
+      const redCardsTotal = sumCardsByInterval(stats.cards.red);
+    
+     // Agregar estos valores al objeto stats
+    stats.totalYellowCards = yellowCardsTotal;
+    stats.totalRedCards = redCardsTotal;} 
+    else {
+      stats.totalYellowCards = 'N/A';
+      stats.totalRedCards = 'N/A';
+    }
+
+    // Verificamos los datos en la consola
     console.log('Estadísticas del equipo:', stats);
     console.log('Tarjetas amarillas:', JSON.stringify(stats.cards.yellow, null, 2));
     console.log('Tarjetas rojas:', JSON.stringify(stats.cards.red, null, 2));
