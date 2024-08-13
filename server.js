@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 const PORT = 3000;
-const API_KEY = '46249bc5c0mshba32cb2d8ef854ap170a42jsn5303c31afe5d'; // Reemplaza con tu clave de API
+const API_KEY = '46249bc5c0mshba32cb2d8ef854ap170a42jsn5303c31afe5d';
 
 // Definimos las ligas que queremos mostrar, con sus respectivos IDs
 const leagues = [
@@ -13,12 +13,24 @@ const leagues = [
   { id: 78, name: 'Bundesliga' }       // Alemania
 ];
 
+// Función para obtener estadísticas de un equipo
+async function getTeamStatistics(teamId, leagueId) {
+  const options = {
+    method: 'GET',
+    url: `https://v3.football.api-sports.io/teams/statistics`,
+    params: { league: leagueId, season: 2023, team: teamId },
+    headers: {
+      'X-RapidAPI-Key': API_KEY,
+      'X-RapidAPI-Host': 'v3.football.api-sports.io'
+    }
+  };
 
-// Endpoint para obtener tarjetas de las 5 grandes ligas en la temporada 2023
+  const response = await axios.request(options);
+  return response.data.response;
+}
 
 // Función para sumar las tarjetas por intervalos
-  function sumCardsByInterval(cards) {
-  // Sumamos las tarjetas en todos los intervalos, ignorando aquellos con valores null
+function sumCardsByInterval(cards) {
   return Object.values(cards).reduce((total, interval) => {
     return total + (interval.total || 0);
   }, 0);
@@ -27,95 +39,16 @@ const leagues = [
 // Endpoint para obtener tarjetas de un equipo específico en la temporada 2023
 app.get('/team/:id/cards', async (req, res) => {
   const teamId = req.params.id;
-  const leagueId = req.query.league;  // Suponiendo que se pase el ID de la liga como parámetro de consulta
+  const leagueId = req.query.league;
   
   try {
-    const options = {
-      method: 'GET',
-      url: `https://v3.football.api-sports.io/teams/statistics`,
-      params: { league: leagueId, season: 2023, team: teamId },  // Ahora especificamos equipo y liga
-      headers: {
-        'X-RapidAPI-Key': API_KEY,
-        'X-RapidAPI-Host': 'v3.football.api-sports.io'
-      }
-    };
-    
-    const response = await axios.request(options);
-    const data = response.data.response;
+    const data = await getTeamStatistics(teamId, leagueId);
 
-    // Sumar tarjetas amarillas y rojas del equipo
     const yellowCardsTotal = sumCardsByInterval(data.cards.yellow);
     const redCardsTotal = sumCardsByInterval(data.cards.red);
 
-    // Añadir los totales al objeto de datos
     data.totalYellowCards = yellowCardsTotal;
     data.totalRedCards = redCardsTotal;
-
-  /*
-
-    // Función para obtener y sumar los corners de una liga
-async function getTotalCorners(leagueId) {
-  let totalCorners = 0;
-
-  try {
-    // Solicitud para obtener todos los fixtures de la liga y temporada especificada
-    const fixturesResponse = await axios.get(`https://api-football-v1.p.rapidapi.com/v3/fixtures`, {
-      params: { league: leagueId, season: '2023' },
-      headers: {
-        'X-RapidAPI-Key': API_KEY,
-        'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
-      }
-    });
-
-    const fixtures = fixturesResponse.data.response;
-
-    // Iterar sobre cada fixture para obtener las estadísticas de corners
-    for (let fixture of fixtures) {
-      const fixtureId = fixture.fixture.id;
-      const statsResponse = await axios.get(`https://api-football-v1.p.rapidapi.com/v3/fixtures/statistics`, {
-        params: { fixture: fixtureId },
-        headers: {
-          'X-RapidAPI-Key': API_KEY,
-          'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
-        }
-      });
-
-      const stats = statsResponse.data.response;
-
-      if (stats.length > 0) {
-        const homeCorners = stats[0].statistics.find(stat => stat.type === "Corners")?.value || 0;
-        const awayCorners = stats[1].statistics.find(stat => stat.type === "Corners")?.value || 0;
-        totalCorners += homeCorners + awayCorners;
-      }
-    }
-  } catch (error) {
-    console.error('Error al obtener los corners:', error.message);
-  }
-
-  return totalCorners;
-}
-
-
-
-*/
-
-/*
-// Endpoint para obtener el total de corners en la temporada 2023-2024 de las 5 grandes ligas
-app.get('/total-corners', async (req, res) => {
-  let totalCornersSum = 0;
-
-  for (let league of leagues) {
-    totalCornersSum += await getTotalCorners(league.id);
-  }
-
-  res.json({
-    season: '2023-2024',
-    totalCorners: totalCornersSum
-  });
-});
-
-*/
-
 
     res.json(data);  // Devolver los datos modificados al cliente
   } catch (error) {
@@ -123,9 +56,30 @@ app.get('/total-corners', async (req, res) => {
   }
 });
 
+// Endpoint para el análisis de partidos
+app.get('/team/:id/match-analysis', async (req, res) => {
+  const teamId = req.params.id;
+  const leagueId = req.query.league;
+  
+  try {
+    const stats = await getTeamStatistics(teamId, leagueId);
 
+    const matchData = {
+      home: stats.fixtures.wins.home + stats.fixtures.draws.home + stats.fixtures.loses.home,
+      away: stats.fixtures.wins.away + stats.fixtures.draws.away + stats.fixtures.loses.away,
+      winsHome: stats.fixtures.wins.home,
+      winsAway: stats.fixtures.wins.away,
+      drawsHome: stats.fixtures.draws.home,
+      drawsAway: stats.fixtures.draws.away,
+      losesHome: stats.fixtures.loses.home,
+      losesAway: stats.fixtures.loses.away,
+    };
 
-
+    res.render('match-analysis', { matchData, teamId });
+  } catch (error) {
+    res.status(500).send('Error al obtener el análisis de partidos');
+  }
+});
 
 // Configuramos EJS como el motor de plantillas
 app.set('view engine', 'ejs');
@@ -140,7 +94,6 @@ app.get('/', (req, res) => {
 app.get('/league/:id/teams', async (req, res) => {
   const leagueId = req.params.id;
   try {
-    // Solicitud a la API para obtener los equipos de la liga seleccionada
     const response = await axios.get(`https://api-football-v1.p.rapidapi.com/v3/teams`, {
       params: { league: leagueId, season: '2023' },
       headers: {
@@ -161,37 +114,22 @@ app.get('/team/:id/stats', async (req, res) => {
   const teamId = req.params.id;
   const leagueId = req.query.league;
   try {
-    // Solicitud a la API para obtener las estadísticas del equipo seleccionado
-    const response = await axios.get(`https://api-football-v1.p.rapidapi.com/v3/teams/statistics`, {
-      params: { league: leagueId, season: '2023', team: teamId },
-      headers: {
-        'X-RapidAPI-Key': API_KEY,
-        'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
-      }
-    });
-    const stats = response.data.response; // Obtenemos las estadísticas del equipo de la respuesta
+    const stats = await getTeamStatistics(teamId, leagueId);
 
-    // Verificamos si stats.cards existe para evitar errores
     if (stats.cards) {
       const yellowCardsTotal = sumCardsByInterval(stats.cards.yellow);
       const redCardsTotal = sumCardsByInterval(stats.cards.red);
     
-     // Agregar estos valores al objeto stats
-    stats.totalYellowCards = yellowCardsTotal;
-    stats.totalRedCards = redCardsTotal;} 
-    else {
+      stats.totalYellowCards = yellowCardsTotal;
+      stats.totalRedCards = redCardsTotal;
+    } else {
       stats.totalYellowCards = 'N/A';
       stats.totalRedCards = 'N/A';
     }
 
-    // Verificamos los datos en la consola
     console.log('Estadísticas del equipo:', stats);
     console.log('Tarjetas amarillas:', JSON.stringify(stats.cards.yellow, null, 2));
     console.log('Tarjetas rojas:', JSON.stringify(stats.cards.red, null, 2));
-    console.log('Estadísticas del equipo:', stats);
-    res.render('team-stats', { stats }); // Renderiza la vista
-
-
 
     res.render('team-stats', { stats }); // Renderizamos la vista 'team-stats.ejs' con las estadísticas del equipo
   } catch (error) {
@@ -204,5 +142,6 @@ app.get('/team/:id/stats', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
 
 
