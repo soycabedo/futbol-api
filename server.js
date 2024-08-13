@@ -51,6 +51,8 @@ app.get('/team/:id/cards', async (req, res) => {
     data.totalYellowCards = yellowCardsTotal;
     data.totalRedCards = redCardsTotal;
 
+  /*
+
     // Función para obtener y sumar los corners de una liga
 async function getTotalCorners(leagueId) {
   let totalCorners = 0;
@@ -93,6 +95,11 @@ async function getTotalCorners(leagueId) {
   return totalCorners;
 }
 
+
+
+*/
+
+/*
 // Endpoint para obtener el total de corners en la temporada 2023-2024 de las 5 grandes ligas
 app.get('/total-corners', async (req, res) => {
   let totalCornersSum = 0;
@@ -106,6 +113,8 @@ app.get('/total-corners', async (req, res) => {
     totalCorners: totalCornersSum
   });
 });
+
+*/
 
 
     res.json(data);  // Devolver los datos modificados al cliente
@@ -179,6 +188,9 @@ app.get('/team/:id/stats', async (req, res) => {
     console.log('Estadísticas del equipo:', stats);
     console.log('Tarjetas amarillas:', JSON.stringify(stats.cards.yellow, null, 2));
     console.log('Tarjetas rojas:', JSON.stringify(stats.cards.red, null, 2));
+    console.log('Estadísticas del equipo:', stats);
+    res.render('team-stats', { stats }); // Renderiza la vista
+
 
 
     res.render('team-stats', { stats }); // Renderizamos la vista 'team-stats.ejs' con las estadísticas del equipo
