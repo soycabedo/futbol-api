@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Partidos</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Análisis de Partidos del Equipo</h1>
+        
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Local</th>
+                    <th scope="col">Visitante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Partidos Ganados</td>
+                    <td><%= matchData.winsHome %></td>
+                    <td><%= matchData.winsAway %></td>
+                </tr>
+                <tr>
+                    <td>Partidos Empatados</td>
+                    <td><%= matchData.drawsHome %></td>
+                    <td><%= matchData.drawsAway %></td>
+                </tr>
+                <tr>
+                    <td>Partidos Perdidos</td>
+                    <td><%= matchData.losesHome %></td>
+                    <td><%= matchData.losesAway %></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="mt-5">Detalles de Partidos</h2>
+        
+    </div>
+</body>
+</html>
