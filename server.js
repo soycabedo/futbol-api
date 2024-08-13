@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 const PORT = 3000;
-const API_KEY = '46249bc5c0mshba32cb2d8ef854ap170a42jsn5303c31afe5d'; // Reemplaza con tu clave de API
+const API_KEY = '46249bc5c0mshba32cb2d8ef854ap170a42jsn5303c31afe5d'; // Tu clave de API
 
 // Definimos las ligas que queremos mostrar, con sus respectivos IDs
 const leagues = [
@@ -189,9 +189,7 @@ app.get('/team/:id/stats', async (req, res) => {
     console.log('Tarjetas amarillas:', JSON.stringify(stats.cards.yellow, null, 2));
     console.log('Tarjetas rojas:', JSON.stringify(stats.cards.red, null, 2));
     console.log('Estadísticas del equipo:', stats);
-    res.render('team-stats', { stats }); // Renderiza la vista
-
-
+    
 
     res.render('team-stats', { stats }); // Renderizamos la vista 'team-stats.ejs' con las estadísticas del equipo
   } catch (error) {
@@ -199,6 +197,99 @@ app.get('/team/:id/stats', async (req, res) => {
     res.send('Error al obtener las estadísticas del equipo.'); // Enviamos un mensaje de error al usuario
   }
 });
+
+
+// Función para categorizar un fixture
+const categorizeFixture = (fixture, teamId) => {
+  const isHome = fixture.teams.home.id === teamId;
+  const isAway = fixture.teams.away.id === teamId;
+
+  let result;
+  if (fixture.goals.home === fixture.goals.away) {
+    result = 'Empatado';
+  } else if (
+    (isHome && fixture.goals.home > fixture.goals.away) ||
+    (isAway && fixture.goals.away > fixture.goals.home)
+  ) {
+    result = 'Ganado';
+  } else {
+    result = 'Perdido';
+  }
+
+  return {
+    date: fixture.fixture.date,
+    homeTeam: fixture.teams.home.name,
+    awayTeam: fixture.teams.away.name,
+    result: result,
+    isAway: isAway,
+  };
+};
+
+// Función para procesar todos los fixtures
+const processFixtures = (fixtures, teamId) => {
+  const ganados = [];
+  const empatados = [];
+  const perdidos = [];
+
+  fixtures.forEach(fixture => {
+    const matchData = categorizeFixture(fixture, teamId);
+
+    if (matchData.result === 'Ganado') {
+      ganados.push(matchData);
+    } else if (matchData.result === 'Empatado') {
+      empatados.push(matchData);
+    } else {
+      perdidos.push(matchData);
+    }
+  });
+
+  return { ganados, empatados, perdidos };
+};
+
+// Ruta para mostrar el analisis de los partidos
+app.get('/match-analysis', async (req, res) => {
+  try {
+      const teamId = req.query.teamId;
+      const response = await axios.get(`https://api-football-v1.p.rapidapi.com/v3/fixtures`, {
+          headers: { 'x-rapidapi-key': API_KEY },
+          params: { team: teamId }
+      });
+      
+      const matches = response.data.response;
+
+      const ganados = matches.filter(m => m.winner === teamId).map(m => ({
+          date: m.fixture.date,
+          homeTeam: m.teams.home.name,
+          awayTeam: m.teams.away.name,
+          result: `${m.goals.home} - ${m.goals.away}`,
+          isAway: m.teams.away.id === teamId
+      }));
+
+      const empatados = matches.filter(m => m.winner === null).map(m => ({
+          date: m.fixture.date,
+          homeTeam: m.teams.home.name,
+          awayTeam: m.teams.away.name,
+          result: `${m.goals.home} - ${m.goals.away}`,
+          isAway: m.teams.away.id === teamId
+      }));
+
+      const perdidos = matches.filter(m => m.winner !== null && m.winner !== teamId).map(m => ({
+          date: m.fixture.date,
+          homeTeam: m.teams.home.name,
+          awayTeam: m.teams.away.name,
+          result: `${m.goals.home} - ${m.goals.away}`,
+          isAway: m.teams.away.id === teamId
+      }));
+
+      res.render('match-analysis', { ganados, empatados, perdidos });
+  } catch (error) {
+      res.status(500).send('Error al obtener los partidos');
+  }
+});
+
+
+
+
 
 // Iniciamos el servidor en el puerto especificado
 app.listen(PORT, () => {

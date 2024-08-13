@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Partidos</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .away-game {
+            text-decoration: underline;
+            text-decoration-color: skyblue;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Análisis de Partidos</h1>
+
+        <!-- Tabla de Partidos Ganados -->
+        <h2>Partidos Ganados</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Equipo Local</th>
+                    <th>Equipo Visitante</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% ganados.forEach(match => { %>
+                    <tr class="<%= match.isAway ? 'away-game' : '' %>">
+                        <td><%= new Date(match.date).toLocaleDateString() %></td>
+                        <td><%= match.homeTeam %></td>
+                        <td><%= match.awayTeam %></td>
+                        <td><%= match.result %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <!-- Tabla de Partidos Empatados -->
+        <h2>Partidos Empatados</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Equipo Local</th>
+                    <th>Equipo Visitante</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% empatados.forEach(match => { %>
+                    <tr class="<%= match.isAway ? 'away-game' : '' %>">
+                        <td><%= new Date(match.date).toLocaleDateString() %></td>
+                        <td><%= match.homeTeam %></td>
+                        <td><%= match.awayTeam %></td>
+                        <td><%= match.result %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <!-- Tabla de Partidos Perdidos -->
+        <h2>Partidos Perdidos</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Equipo Local</th>
+                    <th>Equipo Visitante</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% perdidos.forEach(match => { %>
+                    <tr class="<%= match.isAway ? 'away-game' : '' %>">
+                        <td><%= new Date(match.date).toLocaleDateString() %></td>
+                        <td><%= match.homeTeam %></td>
+                        <td><%= match.awayTeam %></td>
+                        <td><%= match.result %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

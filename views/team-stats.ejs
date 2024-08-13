@@ -12,6 +12,11 @@
     <h1 class="mt-4">Estadísticas del Equipo</h1>
     <!-- Nombre del equipo -->
     <h2><%= stats.team.name %></h2>
+
+    <div class="mt-5">
+      <h2><a href="/match-analysis">Match Analysis</a></h2>
+    </div>
+    
     
     <!-- Lista de estadísticas básicas del equipo -->
     <ul class="list-group">
@@ -21,12 +26,7 @@
       <li class="list-group-item">Tarjetas Amarillas: <%= typeof stats.totalYellowCards !== 'undefined' ? stats.totalYellowCards : 'N/A' %></li>
       <li class="list-group-item">Tarjetas Rojas: <%= typeof stats.totalRedCards !== 'undefined' ? stats.totalRedCards : 'N/A' %></li>
     </ul>
-    
-    
-    
-    
-    
-
+       
     <!-- Sección para los gráficos -->
     <h3 class="mt-4">Gráficos de Estadísticas</h3>
     <!-- Gráfico para mostrar la distribución de los goles -->

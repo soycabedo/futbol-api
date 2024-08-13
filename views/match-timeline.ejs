@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Línea de Tiempo del Partido</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Línea de Tiempo del Partido</h1>
+        
+        <ul class="list-group">
+            <% events.forEach(event => { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><strong><%= event.time.elapsed %>'</strong> - <%= event.player.name %></span>
+                    <span class="badge badge-primary badge-pill">
+                        <%= event.type === 'Goal' ? '⚽' : (event.type === 'Card' ? '🟥/🟨' : '') %> 
+                        <%= event.detail %>
+                    </span>
+                </li>
+            <% }) %>
+        </ul>
+        <a href="/team/<%= teamId %>/match-analysis" class="btn btn-primary mt-4">Volver al análisis de partidos</a>
+    </div>
+</body>
+</html>
