@@ -51,6 +51,63 @@ app.get('/team/:id/cards', async (req, res) => {
     data.totalYellowCards = yellowCardsTotal;
     data.totalRedCards = redCardsTotal;
 
+    // Función para obtener y sumar los corners de una liga
+async function getTotalCorners(leagueId) {
+  let totalCorners = 0;
+
+  try {
+    // Solicitud para obtener todos los fixtures de la liga y temporada especificada
+    const fixturesResponse = await axios.get(`https://api-football-v1.p.rapidapi.com/v3/fixtures`, {
+      params: { league: leagueId, season: '2023' },
+      headers: {
+        'X-RapidAPI-Key': API_KEY,
+        'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+      }
+    });
+
+    const fixtures = fixturesResponse.data.response;
+
+    // Iterar sobre cada fixture para obtener las estadísticas de corners
+    for (let fixture of fixtures) {
+      const fixtureId = fixture.fixture.id;
+      const statsResponse = await axios.get(`https://api-football-v1.p.rapidapi.com/v3/fixtures/statistics`, {
+        params: { fixture: fixtureId },
+        headers: {
+          'X-RapidAPI-Key': API_KEY,
+          'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+        }
+      });
+
+      const stats = statsResponse.data.response;
+
+      if (stats.length > 0) {
+        const homeCorners = stats[0].statistics.find(stat => stat.type === "Corners")?.value || 0;
+        const awayCorners = stats[1].statistics.find(stat => stat.type === "Corners")?.value || 0;
+        totalCorners += homeCorners + awayCorners;
+      }
+    }
+  } catch (error) {
+    console.error('Error al obtener los corners:', error.message);
+  }
+
+  return totalCorners;
+}
+
+// Endpoint para obtener el total de corners en la temporada 2023-2024 de las 5 grandes ligas
+app.get('/total-corners', async (req, res) => {
+  let totalCornersSum = 0;
+
+  for (let league of leagues) {
+    totalCornersSum += await getTotalCorners(league.id);
+  }
+
+  res.json({
+    season: '2023-2024',
+    totalCorners: totalCornersSum
+  });
+});
+
+
     res.json(data);  // Devolver los datos modificados al cliente
   } catch (error) {
     res.status(500).send('Error al obtener las tarjetas del equipo');
