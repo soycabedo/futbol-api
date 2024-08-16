@@ -4,6 +4,28 @@ const app = express();
 const PORT = 3000;
 const API_KEY = '46249bc5c0mshba32cb2d8ef854ap170a42jsn5303c31afe5d'; // Reemplaza con tu clave de API
 
+// Configurar el motor de plantillas (si estás usando EJS)
+app.set('view engine', 'ejs');
+
+// Servir archivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Ruta de prueba
+app.get('/test', (req, res) => {
+  res.sendFile(path.join(__dirname, 'test', 'TestZone.html'));
+});
+
+// Ruta principal
+app.get('/', (req, res) => {
+  res.send('Fútbol API');
+});
+
+app.listen(port, () => {
+  console.log(`Servidor escuchando en http://localhost:${port}`);
+});
+
+
+
 // Definimos las ligas que queremos mostrar, con sus respectivos IDs
 const leagues = [
   { id: 140, name: 'La Liga' },        // España
