@@ -167,6 +167,25 @@ app.get('/team/:id/stats', async (req, res) => {
       stats.totalRedCards = 'N/A';
     }
 
+     // Ahora aseguramos que los logos y banderas también se pasen a la vista
+     const teamData = {
+      name: stats.team.name,
+      logo: stats.team.logo
+    };
+
+    const leagueData = {
+      name: stats.league.name,
+      flag: stats.league.flag,
+      season: stats.league.season
+    };
+
+    // Pasar los datos a la vista
+    res.render('team-stats', { 
+      stats, 
+      team: teamData, 
+      league: leagueData 
+    });
+
     // Verificamos los datos en la consola
     console.log('Estadísticas del equipo:', stats);
     console.log('Tarjetas amarillas:', JSON.stringify(stats.cards.yellow, null, 2));

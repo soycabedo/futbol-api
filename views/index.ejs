@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fútbol API</title>
-  <!-- Incluimos Bootstrap desde un CDN para utilizar sus estilos predefinidos -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-yellow-500 via-yellow-300 to-yellow-100">
   <div class="container">
-    <!-- Título principal de la página -->
     <h1 class="mt-4">Ligas de Fútbol</h1>
-    <!-- Lista de ligas disponibles -->
     <ul class="list-group">
       <% leagues.forEach(league => { %>
-        <!-- Creamos un enlace para cada liga que redirige a la página de equipos -->
         <li class="list-group-item">
           <a href="/league/<%= league.id %>/teams"><%= league.name %></a>
         </li>
@@ -21,5 +19,7 @@
   </div>
 </body>
 </html>
+
+
 
 

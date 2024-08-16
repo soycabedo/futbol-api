@@ -1,0 +1,52 @@
+<!-- test/TestZone.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Zone</title>
+  <script src="https://unpkg.com/react/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@react-spring/web/dist/web.cjs.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    const { useSpring, animated } = window['@react-spring/web'];
+
+    function TestZone() {
+      const teams = [
+        { id: 1, name: 'Team A', logo: 'https://via.placeholder.com/100' },
+        { id: 2, name: 'Team B', logo: 'https://via.placeholder.com/100' },
+        { id: 3, name: 'Team C', logo: 'https://via.placeholder.com/100' },
+      ];
+
+      return (
+        <div style={{ display: 'flex', justifyContent: 'space-around', padding: '50px' }}>
+          {teams.map((team) => (
+            <AnimatedTeamLogo key={team.id} logoSrc={team.logo} teamName={team.name} />
+          ))}
+        </div>
+      );
+    }
+
+    function AnimatedTeamLogo({ logoSrc, teamName }) {
+      const styles = useSpring({
+        from: { opacity: 0, transform: 'scale(0.5)' },
+        to: { opacity: 1, transform: 'scale(1)' },
+        config: { tension: 180, friction: 12 },
+      });
+
+      return (
+        <animated.div style={styles}>
+          <img src={logoSrc} alt={`${teamName} logo`} style={{ width: '100px', height: '100px' }} />
+          <p>{teamName}</p>
+        </animated.div>
+      );
+    }
+
+    ReactDOM.render(<TestZone />, document.getElementById('root'));
+  </script>
+</body>
+</html>

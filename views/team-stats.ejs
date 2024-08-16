@@ -16,6 +16,19 @@
     <div class="mt-5">
       <h2><a href="/match-analysis">Match Analysis</a></h2>
     </div>
+
+    <div class="container mt-4">
+      <!-- Mostrar el logo del equipo -->
+      <div class="d-flex align-items-center mb-4">
+          <img src="<%= team.logo %>" alt="Logo del equipo" class="logo mr-3">
+          <h2><%= team.name %></h2>
+      </div>
+
+      <!-- Mostrar la bandera de la liga -->
+      <div class="d-flex align-items-center mb-4">
+          <img src="<%= league.flag %>" alt="Bandera del país" class="logo mr-3">
+          <h3><%= league.name %> - Temporada <%= league.season %></h3>
+      </div>
     
     
     <!-- Lista de estadísticas básicas del equipo -->
