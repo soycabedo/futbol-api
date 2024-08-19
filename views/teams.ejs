@@ -1,58 +1,47 @@
 <!DOCTYPE html>
 <html>
-
-
-<div id="teams-root"></div>
-<script src="/bundle.js"></script>
-
-
-
-
-
 <head>
   <title>Equipos de Liga</title>
-  <!-- Incluimos Bootstrap para el estilo de la página -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    /* Estilo para el fondo de la página */
     body {
       background-image: url('bg-gradient-to-r from-yellow-500 via-yellow-300 to-yellow-100');
       background-size: cover;
       background-repeat: no-repeat;
       background-attachment: fixed;
       background-position: center;
-      color: #fff; /* Cambia el color del texto para que sea visible sobre el fondo */
+      color: #fff;
     }
-    /* Estilo para los ítems de la lista */
     .list-group-item {
-      background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente para los ítems */
+      background-color: rgba(0, 0, 0, 0.6);
       border: none;
       color: #fff;
     }
-    /* Estilo para los enlaces */
     .list-group-item a {
-      color: #00f; /* Color azul para los enlaces */
+      color: #00f;
     }
-    /* Cambiar el color de los enlaces al pasar el ratón */
     .list-group-item a:hover {
-      color: #0ff; /* Color cian al pasar el ratón */
+      color: #0ff;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Título de la página -->
     <h1 class="mt-4">Equipos de la Liga</h1>
-    <!-- Lista de equipos de la liga seleccionada -->
     <ul class="list-group">
       <% teams.forEach(team => { %>
-        <!-- Creamos un enlace para cada equipo que redirige a la página de estadísticas del equipo -->
         <li class="list-group-item">
           <a href="/team/<%= team.team.id %>/stats?league=<%= leagueId %>"><%= team.team.name %></a>
         </li>
       <% }) %>
     </ul>
   </div>
+
+  <!-- React root element -->
+  <div id="teams-root"></div>
+  
+  <!-- Bundle JS -->
+  <script src="/bundle.js"></script>
 </body>
 </html>
 
