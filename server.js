@@ -260,6 +260,8 @@ app.get('/match-timeline/:matchId', async (req, res) => {
   }
 });
 
+const path = require('path');
+
 // Iniciamos el servidor en el puerto especificado
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
