@@ -1,8 +1,14 @@
 const express = require('express');
 const axios = require('axios');
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 const API_KEY = '46249bc5c0mshba32cb2d8ef854ap170a42jsn5303c31afe5d'; // Reemplaza con tu clave de API
+const path = require('path');
+
+
+// Luego puedes usar 'path' como en esta línea
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Configurar el motor de plantillas (si estás usando EJS)
 app.set('view engine', 'ejs');
@@ -20,9 +26,10 @@ app.get('/', (req, res) => {
   res.send('Fútbol API');
 });
 
-app.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
+
 
 
 
@@ -259,8 +266,6 @@ app.get('/match-timeline/:matchId', async (req, res) => {
     res.status(500).send('Error al obtener la línea de tiempo del partido');
   }
 });
-
-const path = require('path');
 
 // Iniciamos el servidor en el puerto especificado
 app.listen(PORT, () => {
